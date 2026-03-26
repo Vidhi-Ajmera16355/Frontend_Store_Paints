@@ -1,15 +1,23 @@
 import React, { useContext, useState } from 'react';
 import AppContext from '../../context/AppContext';
 import { useNavigate, Link } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
 
 const Register = () => {
-    const { register } = useContext(AppContext);
+    const { register, googleLogin } = useContext(AppContext);
     const navigate = useNavigate();
     const [formData, setFormData] = useState({ name: '', email: '', password: '' });
 
     const onChangeHandler = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
+    };
+
+    const handleGoogleSuccess = async (credentialResponse) => {
+        const result = await googleLogin(credentialResponse.credential);
+        if (result?.success) {
+            navigate(result.isAdmin ? '/admin' : '/');
+        }
     };
 
     const submitHandler = async (e) => {
@@ -43,9 +51,22 @@ const Register = () => {
                     <button type="submit" className="btn-paint-accent" style={{ width: '100%', padding: '0.75rem', fontSize: '1rem', marginTop: '0.5rem' }}>
                         Create Account
                     </button>
+
+                    <div style={{ margin: '1.5rem 0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <span style={{ height: '1px', background: 'var(--border)', flex: 1 }}></span>
+                        <span style={{ padding: '0 1rem', color: 'var(--text-muted)', fontSize: '0.9rem' }}>OR</span>
+                        <span style={{ height: '1px', background: 'var(--border)', flex: 1 }}></span>
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <GoogleLogin 
+                            onSuccess={handleGoogleSuccess}
+                            onError={() => console.log('Login Failed')}
+                        />
+                    </div>
                 </form>
 
-                <p style={{ textAlign: 'center', marginTop: '1.5rem', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                <p style={{ textAlign: 'center', margin: '1.5rem 0', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
                     Already have an account?{' '}
                     <Link to="/login" style={{ color: 'var(--primary)', fontWeight: 600 }}>Sign in</Link>
                 </p>

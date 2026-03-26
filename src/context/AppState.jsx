@@ -76,6 +76,28 @@ const AppState = (props) => {
         return api.data;
     };
 
+    const googleLogin = async (credential) => {
+        try {
+            const api = await axios.post(`${url}/user/google-auth`, { credential }, {
+                headers: { "Content-Type": "application/json" }, withCredentials: true
+            });
+            if (api.data.success) {
+                toast.success(api.data.message, toastOpts);
+                setToken(api.data.token);
+                setIsAuthenticated(true);
+                setIsAdmin(api.data.isAdmin || false);
+                localStorage.setItem("token", api.data.token);
+                localStorage.setItem("isAdmin", api.data.isAdmin ? 'true' : 'false');
+            } else {
+                toast.error(api.data.message, toastOpts);
+            }
+            return api.data;
+        } catch (error) {
+            toast.error(error.message, toastOpts);
+            return { success: false, message: error.message };
+        }
+    };
+
     const logout = () => {
         setIsAuthenticated(false);
         setIsAdmin(false);
@@ -167,7 +189,7 @@ const AppState = (props) => {
 
     return (
         <AppContext.Provider value={{
-            products, register, login, url, token,
+            products, register, login, googleLogin, url, token,
             setIsAuthenticated, isAuthenticated, isAdmin,
             filteredData, setFilteredData, logout, user,
             addToCart, cart, decreaseQty, removeFromCart,
