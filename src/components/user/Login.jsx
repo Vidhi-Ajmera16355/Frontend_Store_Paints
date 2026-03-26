@@ -8,6 +8,7 @@ const Login = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [loading,  setLoading]  = useState(false);
+    const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID?.trim();
 
     const onChangerHandler = (e) => {
         const { name, value } = e.target;
@@ -26,6 +27,7 @@ const Login = () => {
     };
 
     const handleGoogleSuccess = async (credentialResponse) => {
+        if (!credentialResponse?.credential) return;
         setLoading(true);
         const result = await googleLogin(credentialResponse.credential);
         setLoading(false);
@@ -66,11 +68,20 @@ const Login = () => {
                     </div>
 
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
-                        <GoogleLogin 
-                            onSuccess={handleGoogleSuccess}
-                            onError={() => console.log('Login Failed')}
-                            useOneTap
-                        />
+                        {googleClientId ? (
+                            <GoogleLogin
+                                onSuccess={handleGoogleSuccess}
+                                onError={() => {
+                                    setLoading(false);
+                                    console.error('Google login failed before a credential was returned.');
+                                }}
+                                useOneTap
+                            />
+                        ) : (
+                            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', textAlign: 'center' }}>
+                                Google sign-in is not configured for this environment.
+                            </p>
+                        )}
                     </div>
                 </form>
                 <p style={{ textAlign: 'center', margin: '1.5rem 0', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
