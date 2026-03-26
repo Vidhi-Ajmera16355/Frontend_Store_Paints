@@ -4,9 +4,10 @@ import axios from 'axios';
 import { toast, Bounce } from "react-toastify";
 
 const AppState = (props) => {
-    // const url = import.meta.env.VITE_API_URL+'/api';
-    const url = "https://paint-store-alpha.vercel.app/api";
-    console.log("API URL:", url);
+    const rawApiUrl = (import.meta.env.VITE_API_URL || "https://paint-store-alpha.vercel.app").trim();
+    const url = rawApiUrl.endsWith('/api')
+        ? rawApiUrl.replace(/\/$/, '')
+        : `${rawApiUrl.replace(/\/$/, '')}/api`;
     const [products, setProducts] = useState([]);
     const [token, setToken] = useState('');
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -93,8 +94,9 @@ const AppState = (props) => {
             }
             return api.data;
         } catch (error) {
-            toast.error(error.message, toastOpts);
-            return { success: false, message: error.message };
+            const message = error.response?.data?.message || error.message;
+            toast.error(message, toastOpts);
+            return { success: false, message };
         }
     };
 
