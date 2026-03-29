@@ -11,6 +11,8 @@ import ProductDetail from './components/product/ProductDetail.jsx';
 import SearchProduct from './components/product/SearchProduct.jsx';
 import Register from './components/user/Register.jsx';
 import Login from './components/user/Login.jsx';
+import ForgotPassword from './components/user/ForgotPassword.jsx';
+import ResetPassword from './components/user/ResetPassword.jsx';
 import About from './components/About.jsx';
 import ContactUs from './components/Contact.jsx';
 import Profile from './components/user/Profile.jsx';
@@ -52,6 +54,8 @@ const App = () => {
                                 <Route path="/product/:id" element={<ProductDetail />} />
                                 <Route path="/login" element={<Login />} />
                                 <Route path="/register" element={<Register />} />
+                                <Route path="/forgot-password" element={<ForgotPassword />} />
+                                <Route path="/reset-password/:token" element={<ResetPassword />} />
                                 <Route path="/about" element={<About />} />
                                 <Route path="/contact" element={<ContactUs />} />
                                 <Route path="/profile" element={<Profile />} />

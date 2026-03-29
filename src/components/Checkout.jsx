@@ -8,6 +8,7 @@ const Checkout = () => {
   const { cart, userAddress, url, user, clearCart } = useContext(AppContext);
   const [qty, setQty] = useState(0);
   const [price, setPrice] = useState(0);
+  const [paymentMethod, setPaymentMethod] = useState("Online");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,10 +26,29 @@ const Checkout = () => {
 
   const handlePayment = async () => {
     console.log("🟡 handlePayment triggered");
-    console.log("Price:", price, "Qty:", qty);
-    console.log("Cart:", cart);
-    console.log("User:", user);
-    console.log("UserAddress:", userAddress);
+    console.log("Price:", price, "Qty:", qty, "Method:", paymentMethod);
+
+    if (paymentMethod === "COD") {
+      try {
+        const orderResponse = await axios.post(`${url}/payment/cod-checkout`, {
+          amount: price,
+          qty: qty,
+          orderItems: cart?.items,
+          userShipping: userAddress,
+          userId: user._id,
+        });
+
+        if (orderResponse.data.success) {
+          clearCart();
+          navigate("/orderconfirmation");
+        } else {
+          alert(`Order failed: ${orderResponse.data.message}`);
+        }
+      } catch (error) {
+        alert(`Error: ${error.message}`);
+      }
+      return;
+    }
 
     // Check if Razorpay script is loaded
     if (!window.Razorpay) {
@@ -151,13 +171,40 @@ const Checkout = () => {
         </table>
       </div>
 
+      <div className="container my-4 text-center">
+        <h4>Select Payment Method</h4>
+        <div className="d-flex justify-content-center gap-4 mt-3">
+          <label>
+            <input 
+              type="radio" 
+              name="paymentMethod" 
+              value="Online" 
+              checked={paymentMethod === "Online"}
+              onChange={() => setPaymentMethod("Online")}
+            /> Online Payment (Razorpay)
+          </label>
+          <label>
+            <input 
+              type="radio" 
+              name="paymentMethod" 
+              value="COD" 
+              checked={paymentMethod === "COD"}
+              onChange={() => setPaymentMethod("COD")}
+            /> Cash On Delivery (+10%)
+          </label>
+        </div>
+        <h3 className="mt-4">
+          Grand Total: ₹{paymentMethod === "COD" ? Math.round(price * 1.10) : price}
+        </h3>
+      </div>
+
       <div className="container text-center my-5">
         <button
           className="btn btn-secondary btn-lg"
-          style={{ fontWeight: "bold" }}
+          style={{ fontWeight: "bold", background: "var(--primary)" }}
           onClick={handlePayment}
         >
-          Procced To Pay
+          {paymentMethod === "COD" ? "Place COD Order" : "Proceed To Pay"}
         </button>
       </div>
     </>

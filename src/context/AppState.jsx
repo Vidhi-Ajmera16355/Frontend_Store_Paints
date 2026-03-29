@@ -56,8 +56,8 @@ const AppState = (props) => {
         theme: "dark", transition: Bounce,
     };
 
-    const register = async (name, email, password) => {
-        const api = await axios.post(`${url}/user/register`, { name, email, password }, {
+    const register = async (name, email, mobile, password) => {
+        const api = await axios.post(`${url}/user/register`, { name, email, mobile, password }, {
             headers: { "Content-Type": "application/json" }, withCredentials: true
         });
         toast.success(api.data.message, toastOpts);
@@ -109,6 +109,26 @@ const AppState = (props) => {
         localStorage.removeItem("token");
         localStorage.removeItem("isAdmin");
         toast.success("Logout Successfully...!", toastOpts);
+    };
+
+    const forgotPassword = async (email) => {
+        const api = await axios.post(`${url}/user/forgot-password`, { email }, {
+            headers: { "Content-Type": "application/json" }, withCredentials: true
+        });
+        toast.info(api.data.message, toastOpts);
+        return api.data;
+    };
+
+    const resetPassword = async (password, resetToken) => {
+        const api = await axios.put(`${url}/user/reset-password/${resetToken}`, { password }, {
+            headers: { "Content-Type": "application/json" }, withCredentials: true
+        });
+        if (api.data.success) {
+            toast.success(api.data.message, toastOpts);
+        } else {
+            toast.error(api.data.message, toastOpts);
+        }
+        return api.data;
     };
 
     const userProfile = async () => {
@@ -196,7 +216,7 @@ const AppState = (props) => {
             filteredData, setFilteredData, logout, user,
             addToCart, cart, decreaseQty, removeFromCart,
             clearCart, shippingAddress, userAddress, userOrder,
-            reload, setReload,
+            reload, setReload, forgotPassword, resetPassword
         }}>
             {props.children}
         </AppContext.Provider>

@@ -80,6 +80,13 @@ const AdminLayout = () => {
                         <span></span><span></span><span></span>
                     </button>
                     <div className="admin-topbar-right">
+                        <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle theme" style={{ marginRight: '10px' }}>
+                            <div className="theme-toggle-track">
+                                <div className="theme-toggle-thumb">
+                                    {theme === 'light' ? '☀️' : '🌙'}
+                                </div>
+                            </div>
+                        </button>
                         <span className="admin-topbar-user">{user?.name || 'Admin'}</span>
                     </div>
                 </header>

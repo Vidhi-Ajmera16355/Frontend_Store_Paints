@@ -7,8 +7,8 @@ const ShowProduct = () => {
 
     return (
         <div className="product-grid">
-            {filteredData?.map((product) => (
-                <div key={product._id} className="product-card">
+            {filteredData?.map((product, index) => (
+                <div key={product._id} className="product-card animate-fade-up" style={{ animationDelay: `${index * 0.05}s` }}>
                     <Link to={`/product/${product._id}`} className="product-card-img-wrap">
                         <img src={product.imgSrc} alt={product.title} />
                     </Link>

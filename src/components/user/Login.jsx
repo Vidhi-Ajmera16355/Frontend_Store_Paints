@@ -46,14 +46,17 @@ const Login = () => {
                 </div>
                 <form onSubmit={submitHandler}>
                     <div className="paint-form-group">
-                        <label className="paint-form-label">Email Address</label>
+                        <label className="paint-form-label">Email Address or Mobile Number</label>
                         <input name="email" value={formData.email} onChange={onChangerHandler}
-                            type="email" className="paint-form-input" placeholder="you@example.com" required />
+                            type="text" className="paint-form-input" placeholder="you@example.com or 9988776655" required />
                     </div>
                     <div className="paint-form-group">
                         <label className="paint-form-label">Password</label>
                         <input name="password" value={formData.password} onChange={onChangerHandler}
                             type="password" className="paint-form-input" placeholder="••••••••" required />
+                        <div style={{ textAlign: 'right', marginTop: '0.5rem' }}>
+                            <Link to="/forgot-password" style={{ color: 'var(--primary)', fontSize: '0.85rem', textDecoration: 'none' }}>Forgot Password?</Link>
+                        </div>
                     </div>
                     <button type="submit" className="btn-paint-primary"
                         style={{ width: '100%', padding: '0.75rem', fontSize: '1rem', marginTop: '0.5rem', opacity: loading ? 0.7 : 1 }}

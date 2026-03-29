@@ -6,7 +6,7 @@ import { GoogleLogin } from '@react-oauth/google';
 const Register = () => {
     const { register, googleLogin } = useContext(AppContext);
     const navigate = useNavigate();
-    const [formData, setFormData] = useState({ name: '', email: '', password: '' });
+    const [formData, setFormData] = useState({ name: '', email: '', mobile: '', password: '' });
 
     const onChangeHandler = (e) => {
         const { name, value } = e.target;
@@ -22,7 +22,7 @@ const Register = () => {
 
     const submitHandler = async (e) => {
         e.preventDefault();
-        const result = await register(formData.name, formData.email, formData.password);
+        const result = await register(formData.name, formData.email, formData.mobile, formData.password);
         if (result.success) navigate('/login');
     };
 
@@ -43,6 +43,10 @@ const Register = () => {
                     <div className="paint-form-group">
                         <label className="paint-form-label">Email Address</label>
                         <input name="email" value={formData.email} onChange={onChangeHandler} type="email" className="paint-form-input" placeholder="you@example.com" />
+                    </div>
+                    <div className="paint-form-group">
+                        <label className="paint-form-label">Mobile Number</label>
+                        <input name="mobile" value={formData.mobile} onChange={onChangeHandler} type="text" className="paint-form-input" placeholder="Current Mobile Number" required />
                     </div>
                     <div className="paint-form-group">
                         <label className="paint-form-label">Password</label>
