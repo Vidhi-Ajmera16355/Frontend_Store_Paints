@@ -2,6 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.jsx';
 import './index.css';
+import 'leaflet/dist/leaflet.css';
 import AppState from './context/AppState.jsx';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 

@@ -50,11 +50,6 @@ const Cart = () => {
                     <span className="stat-label">Total Price</span>
                     <span className="stat-value">₹{price}</span>
                 </div>
-                <div style={{ marginLeft: 'auto', display: 'flex', gap: '0.75rem' }}>
-                    <button className="btn-paint-accent" style={{ padding: '0.6rem 1.5rem' }} onClick={() => navigate('/shipping')}>
-                        Checkout →
-                    </button>
-                </div>
             </div>
 
             {cart.items.map((product) => (

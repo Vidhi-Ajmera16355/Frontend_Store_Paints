@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import AppContext from '../context/AppContext';
 import { useNavigate } from 'react-router-dom';
+import MapLocationPicker from './MapLocationPicker';
 
 const Address = () => {
     const { shippingAddress, userAddress } = useContext(AppContext);
@@ -12,6 +13,17 @@ const Address = () => {
         setFormData({ ...formData, [name]: value });
     };
 
+    const handleMapLocationSelect = (locationData) => {
+        setFormData((prev) => ({
+            ...prev,
+            address: locationData.address || prev.address,
+            city: locationData.city || prev.city,
+            state: locationData.state || prev.state,
+            country: locationData.country || prev.country,
+            pincode: locationData.pincode || prev.pincode,
+        }));
+    };
+
     const submitHandler = async (e) => {
         e.preventDefault();
         const { fullName, address, city, state, country, pincode, phoneNumber } = formData;
@@ -21,20 +33,34 @@ const Address = () => {
     };
 
     return (
-        <div style={{ maxWidth: '680px', margin: '2.5rem auto', padding: '0 1.5rem' }}>
+        <div style={{ maxWidth: '780px', margin: '2.5rem auto', padding: '0 1.5rem' }}>
             <h1 style={{ fontFamily: 'Playfair Display, serif', marginBottom: '0.4rem' }}>Shipping Address</h1>
-            <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>Enter your delivery details below</p>
+            <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>Enter your delivery details below or select on the map</p>
 
-            <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '2rem', boxShadow: 'var(--shadow)' }}>
+            {/* ─── Map Location Picker ─── */}
+            <div style={{ marginBottom: '2rem' }}>
+                <MapLocationPicker onLocationSelect={handleMapLocationSelect} />
+            </div>
+
+            {/* ─── Manual Address Form ─── */}
+            <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: 'var(--radius, 12px)', padding: '2rem', boxShadow: 'var(--shadow)' }}>
+                <div className="address-form-section-header">
+                    <span className="address-form-section-icon">✏️</span>
+                    <div>
+                        <h3 style={{ fontFamily: 'Playfair Display, serif', fontSize: '1.1rem', margin: 0 }}>Address Details</h3>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', margin: 0 }}>Confirm or edit the address fields below</p>
+                    </div>
+                </div>
+
                 <form onSubmit={submitHandler}>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
                         <div className="paint-form-group">
                             <label className="paint-form-label">Full Name</label>
-                            <input name="fullName" value={formData.fullName} onChange={onChangerHandler} type="text" className="paint-form-input" />
+                            <input name="fullName" value={formData.fullName} onChange={onChangerHandler} type="text" className="paint-form-input" required />
                         </div>
                         <div className="paint-form-group">
                             <label className="paint-form-label">Phone Number</label>
-                            <input name="phoneNumber" value={formData.phoneNumber} onChange={onChangerHandler} type="number" className="paint-form-input" />
+                            <input name="phoneNumber" value={formData.phoneNumber} onChange={onChangerHandler} type="number" className="paint-form-input" required />
                         </div>
                     </div>
 
@@ -60,7 +86,7 @@ const Address = () => {
                         </div>
                         <div className="paint-form-group">
                             <label className="paint-form-label">Address / Nearby Landmark</label>
-                            <textarea name="address" value={formData.address} onChange={onChangerHandler} className="paint-form-input" rows={1} />
+                            <textarea name="address" value={formData.address} onChange={onChangerHandler} className="paint-form-input" rows={2} />
                         </div>
                     </div>
 
